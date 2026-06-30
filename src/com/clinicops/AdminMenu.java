@@ -31,9 +31,9 @@ public class AdminMenu {
     }
 
     private void displayAdminOptions() {
-        System.out.println("      ADMIN MENU — TownClinic ");
+        System.out.println("      ADMIN MENU — TownClinic  ");
         System.out.println("                                ");
-        System.out.println("  1. Doctor Entry             ");
+        System.out.println("  1. Doctor Entry              ");
         System.out.println("  2. Bulk Data Entry          ");
         System.out.println("  3. View Audit Logs          ");
         System.out.println("  4. View Doctors             ");
@@ -42,10 +42,10 @@ public class AdminMenu {
 
     private void registerDoctor() {
         System.out.println("\n--- Register New Doctor ---");
-        String name  = ScannerHelper.readString("  Name            : ");
-        String spec  = ScannerHelper.readString("  Specialization  : ");
-        int    exp   = ScannerHelper.readInt(   "  Experience (yrs): ");
-        String shift = ScannerHelper.readString("  Shift (Morning/Evening/Both): ");
+        String         name  = ScannerHelper.readString("  Name            : ");
+        Specialization spec  = ScannerHelper.readEnumChoice("  Select Specialization:", Specialization.class);
+        int            exp   = ScannerHelper.readInt("  Experience (yrs): ");
+        Shift          shift = ScannerHelper.readEnumChoice("  Select Shift:", Shift.class);
 
         Doctor doctor = new Doctor(name, spec, exp, shift);
         doctorList.add(doctor);
@@ -58,13 +58,12 @@ public class AdminMenu {
             System.out.println("  No doctors registered yet.\n");
             return;
         }
-        System.out.println("+--------+----------------------+-----------------+---------+----------+");
-        System.out.println("| ID     | Name                 | Specialization  |   Exp   | Shift    |");
-        System.out.println("+--------+----------------------+-----------------+---------+----------+");
+        System.out.println("+--------+----------------------+----------------+---------+----------+");
+        System.out.println("| ID     | Name                 | Specialization |   Exp   | Shift    |");
+        System.out.println("+--------+----------------------+----------------+---------+----------+");
         for (Doctor d : doctorList) System.out.println(d);
-        System.out.println("+--------+----------------------+-----------------+---------+----------+\n");
+        System.out.println("+--------+----------------------+----------------+---------+----------+\n");
     }
 
-    // UC9: Cross-module access — FrontDeskMenu needs to read this list
     public static ArrayList<Doctor> getDoctorList() { return doctorList; }
 }
