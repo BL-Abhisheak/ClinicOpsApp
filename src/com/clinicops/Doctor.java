@@ -51,4 +51,5 @@ public class Doctor {
         return String.format("| %-6s | %-20s | %-14s | %3d yrs | %-8s |",
                 id, name, specialization.name(), experience, shift.name());
     }
+
 }

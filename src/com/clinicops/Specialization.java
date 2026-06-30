@@ -7,4 +7,5 @@ public enum Specialization {
     ORTHOPEDICS,
     PEDIATRICS,
     GENERAL
+
 }
