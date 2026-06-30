@@ -1,15 +1,10 @@
 package com.clinicops;
 
+import java.util.ArrayList;
+
 public class AdminMenu {
 
-    private static String doc1Name, doc1Spec, doc1Shift;
-    private static int    doc1Exp;
-
-    private static String doc2Name, doc2Spec, doc2Shift;
-    private static int    doc2Exp;
-
-    private static String doc3Name, doc3Spec, doc3Shift;
-    private static int    doc3Exp;
+    private static final ArrayList<Doctor> doctorList = new ArrayList<>();
 
     public void show() {
         boolean logout = false;
@@ -19,18 +14,14 @@ public class AdminMenu {
             int choice = ScannerHelper.readInt("Enter your choice: ");
 
             switch (choice) {
-                case 1:
-                    registerDoctors();
-                    break;
+                case 1: registerDoctor();  break;
                 case 2:
                     System.out.println("\n  [Bulk Data Entry] -- Logic will be implemented in UC5.\n");
                     break;
                 case 3:
                     System.out.println("\n  [View Audit Logs] -- Logic will be implemented in UC12.\n");
                     break;
-                case 4:
-                    displayDoctors();
-                    break;
+                case 4: displayDoctors(); break;
                 case 5:
                     System.out.println("\n  Logging out from Admin panel. Goodbye, Admin!\n");
                     logout = true;
@@ -42,8 +33,8 @@ public class AdminMenu {
     }
 
     private void displayAdminOptions() {
-        System.out.println("      ADMIN MENU — TownClinic ");
-        System.out.println("                                 ");
+        System.out.println("                                ");
+        System.out.println("                                ");
         System.out.println("  1. Doctor Entry             ");
         System.out.println("  2. Bulk Data Entry          ");
         System.out.println("  3. View Audit Logs          ");
@@ -51,40 +42,35 @@ public class AdminMenu {
         System.out.println("  5. Logout                   ");
     }
 
-    private void registerDoctors() {
-        System.out.println("\n--- Registering Doctor 1 ---");
-        doc1Name = ScannerHelper.readString("  Enter Name        : ");
-        doc1Spec = ScannerHelper.readString("  Enter Specialization: ");
-        doc1Exp  = ScannerHelper.readInt(   "  Enter Experience (yrs): ");
-        doc1Shift= ScannerHelper.readString("  Enter Shift (Morning/Evening/Both): ");
+    private void registerDoctor() {
+        System.out.println("\n--- Register New Doctor ---");
+        String name  = ScannerHelper.readString("  Name            : ");
+        String spec  = ScannerHelper.readString("  Specialization  : ");
+        int    exp   = ScannerHelper.readInt(   "  Experience (yrs): ");
+        String shift = ScannerHelper.readString("  Shift (Morning/Evening/Both): ");
 
-        System.out.println("\n--- Registering Doctor 2 ---");
-        doc2Name = ScannerHelper.readString("  Enter Name        : ");
-        doc2Spec = ScannerHelper.readString("  Enter Specialization: ");
-        doc2Exp  = ScannerHelper.readInt(   "  Enter Experience (yrs): ");
-        doc2Shift= ScannerHelper.readString("  Enter Shift (Morning/Evening/Both): ");
+        Doctor doctor = new Doctor(name, spec, exp, shift);
+        doctorList.add(doctor);
 
-        System.out.println("\n--- Registering Doctor 3 ---");
-        doc3Name = ScannerHelper.readString("  Enter Name        : ");
-        doc3Spec = ScannerHelper.readString("  Enter Specialization: ");
-        doc3Exp  = ScannerHelper.readInt(   "  Enter Experience (yrs): ");
-        doc3Shift= ScannerHelper.readString("  Enter Shift (Morning/Evening/Both): ");
-
-        System.out.println("\n  ✓ 3 Doctors registered successfully!\n");
+        System.out.println("\n  ✓ Doctor registered successfully! ID: " + doctor.getId() + "\n");
     }
 
     private void displayDoctors() {
         System.out.println("\n--- Registered Doctors ---");
-        if (doc1Name == null) {
-            System.out.println("  No doctors registered yet.");
+        if (doctorList.isEmpty()) {
+            System.out.println("  No doctors registered yet.\n");
             return;
         }
-        System.out.printf("  Doctor 1 | %-20s | %-15s | %d yrs | %s%n",
-                doc1Name, doc1Spec, doc1Exp, doc1Shift);
-        System.out.printf("  Doctor 2 | %-20s | %-15s | %d yrs | %s%n",
-                doc2Name, doc2Spec, doc2Exp, doc2Shift);
-        System.out.printf("  Doctor 3 | %-20s | %-15s | %d yrs | %s%n",
-                doc3Name, doc3Spec, doc3Exp, doc3Shift);
-        System.out.println();
+        System.out.println("+--------+----------------------+-----------------+---------+----------+");
+        System.out.println("| ID     | Name                 | Specialization  |   Exp   | Shift    |");
+        System.out.println("+--------+----------------------+-----------------+---------+----------+");
+        for (Doctor d : doctorList) {
+            System.out.println(d);
+        }
+        System.out.println("+--------+----------------------+-----------------+---------+----------+\n");
+    }
+
+    public static ArrayList<Doctor> getDoctorList() {
+        return doctorList;
     }
 }
