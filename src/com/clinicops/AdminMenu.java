@@ -28,16 +28,16 @@ public class AdminMenu {
     }
 
     private void displayAdminOptions() {
-        System.out.println("      ADMIN MENU — TownClinic ");
-        System.out.println("                                ");
-        System.out.println("  1. Doctor Entry             ");
-        System.out.println("  2. Bulk Data Entry          ");
-        System.out.println("  3. View Audit Logs          ");
-        System.out.println("  4. View Doctors             ");
-        System.out.println("  5. Logout                   ");
-        System.out.println("                                ");
+        System.out.println("╔══════════════════════════════╗");
+        System.out.println("║      ADMIN MENU — TownClinic ║");
+        System.out.println("╠══════════════════════════════╣");
+        System.out.println("║  1. Doctor Entry             ║");
+        System.out.println("║  2. Bulk Data Entry          ║");
+        System.out.println("║  3. View Audit Logs          ║");
+        System.out.println("║  4. View Doctors             ║");
+        System.out.println("║  5. Logout                   ║");
+        System.out.println("╚══════════════════════════════╝");
     }
-
 
     private void registerDoctor() {
         System.out.println("\n--- Register New Doctor ---");
@@ -52,19 +52,19 @@ public class AdminMenu {
     }
 
     private void bulkEntry() {
-        System.out.println("\n--- Bulk Doctor Import from CSV ---");
+        System.out.println("\n--- Bulk Doctor Import from CSV (OpenCSV) ---");
         String filePath = ScannerHelper.readString("  Enter full file path (.csv): ");
 
         FileHandler fileHandler = new FileHandler();
-        List<Doctor> imported = fileHandler.readDoctorsFromCSV(filePath);
+        List<Doctor> imported = fileHandler.readDoctorsFromCSV(filePath, doctorList);
 
         if (imported.isEmpty()) {
-            System.out.println("  No valid records imported.\n");
+            System.out.println("  No valid new records imported.\n");
             return;
         }
 
         doctorList.addAll(imported);
-        System.out.println("  ✓ Successfully imported " + imported.size() + " doctor(s).\n");
+        System.out.println("  ✓ " + imported.size() + " doctor(s) added to the system.\n");
     }
 
     private void viewAuditLogs() {

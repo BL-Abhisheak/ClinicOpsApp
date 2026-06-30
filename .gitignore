@@ -1,62 +1,16 @@
-#### IntelliJ IDEA ###
-#out/
-#!**/src/main/**/out/
-#!**/src/test/**/out/
-#.kotlin
-#
-#### Eclipse ###
-#.apt_generated
-#.classpath
-#.factorypath
-#.project
-#.settings
-#.springBeans
-#.sts4-cache
-#bin/
-#!**/src/main/**/bin/
-#!**/src/test/**/bin/
-#
-#### NetBeans ###
-#/nbproject/private/
-#/nbbuild/
-#/dist/
-#/nbdist/
-#/.nb-gradle/
-#
-#### VS Code ###
-#.vscode/
-#
-#### Mac OS ###
-#.DS_Store
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Ignore everything
 *
 
-# Keep this .gitignore
+# Keep gitignore
 !.gitignore
 
-# Keep the src directory
+# Keep source code
 !src/
 !src/**
 
-# (Optional) Keep empty directories inside src
-#!src/**/
+# Keep Maven files
+!pom.xml
+!mvnw
+!mvnw.cmd
+!.mvn/
+!.mvn/**
