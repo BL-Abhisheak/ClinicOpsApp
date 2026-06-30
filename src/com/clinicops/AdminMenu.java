@@ -37,6 +37,7 @@ public class AdminMenu {
         System.out.println("                                ");
     }
 
+
     private void registerDoctor() {
         System.out.println("\n--- Register New Doctor ---");
         String         name  = ScannerHelper.readString("  Name            : ");
