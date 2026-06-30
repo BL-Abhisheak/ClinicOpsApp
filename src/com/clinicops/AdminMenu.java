@@ -1,6 +1,7 @@
 package com.clinicops;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AdminMenu {
 
@@ -51,7 +52,19 @@ public class AdminMenu {
     }
 
     private void bulkEntry() {
-        System.out.println("\n  [Bulk Data Entry] -- Will be implemented in UC5.\n");
+        System.out.println("\n--- Bulk Doctor Import from CSV ---");
+        String filePath = ScannerHelper.readString("  Enter full file path (.csv): ");
+
+        FileHandler fileHandler = new FileHandler();
+        List<Doctor> imported = fileHandler.readDoctorsFromCSV(filePath);
+
+        if (imported.isEmpty()) {
+            System.out.println("  No valid records imported.\n");
+            return;
+        }
+
+        doctorList.addAll(imported);
+        System.out.println("  ✓ Successfully imported " + imported.size() + " doctor(s).\n");
     }
 
     private void viewAuditLogs() {
