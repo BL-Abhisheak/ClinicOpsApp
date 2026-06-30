@@ -1,10 +1,12 @@
 package com.clinicops;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class FrontDeskMenu {
 
-    private static final ArrayList<Patient> patientList = new ArrayList<>();
+    private static final ArrayList<Patient>     patientList     = new ArrayList<>();
+    private static final ArrayList<Appointment> appointmentList = new ArrayList<>();
 
     public void show() {
         boolean logout = false;
@@ -12,15 +14,16 @@ public class FrontDeskMenu {
             displayFrontDeskOptions();
             int choice = ScannerHelper.readInt("Enter your choice: ");
             switch (choice) {
-                case 1: registerPatient(); break;
-                case 2: bookAppointment(); break;
-                case 3: viewPatients();    break;
-                case 4:
+                case 1: registerPatient();    break;
+                case 2: bookAppointment();    break;
+                case 3: viewPatients();       break;
+                case 4: viewAppointments();   break;
+                case 5:
                     System.out.println("\n  Logging out from Front Desk panel. Goodbye!\n");
                     logout = true;
                     break;
                 default:
-                    System.out.println("\n  [ERROR] Invalid option. Please choose between 1 and 4.\n");
+                    System.out.println("\n  [ERROR] Invalid option. Please choose between 1 and 5.\n");
             }
         }
     }
@@ -28,10 +31,11 @@ public class FrontDeskMenu {
     private void displayFrontDeskOptions() {
         System.out.println("  FRONT DESK MENU — TownClinic    ");
         System.out.println("                                     ");
-        System.out.println("  1. Register Patient             ");
+        System.out.println("  1. Register Patient            ");
         System.out.println("  2. Book Appointment             ");
         System.out.println("  3. View Patients                ");
-        System.out.println("  4. Logout                       ");
+        System.out.println("  4. View Appointments            ");
+        System.out.println("  5. Logout                       ");
     }
 
     private void registerPatient() {
@@ -56,11 +60,53 @@ public class FrontDeskMenu {
 
     private Patient findPatientByMobile(String mobile) {
         for (Patient p : patientList) {
-            if (p.getMobileNumber().equals(mobile)) {
-                return p;
-            }
+            if (p.getMobileNumber().equals(mobile)) return p;
         }
         return null;
+    }
+
+    private void bookAppointment() {
+        System.out.println("\n--- Book Appointment ---");
+
+        String mobile = ScannerHelper.readMobileNumber("  Patient Mobile Number: ");
+        Patient patient = findPatientByMobile(mobile);
+        if (patient == null) {
+            System.out.println("  [ERROR] Patient not registered. Please register first.\n");
+            return;
+        }
+        System.out.println("  Patient found: " + patient.getName());
+
+        String slot = ScannerHelper.readSlotChoice("\n  Select preferred appointment slot:");
+
+        ArrayList<Doctor> allDoctors = AdminMenu.getDoctorList();
+        if (allDoctors.isEmpty()) {
+            System.out.println("  [ERROR] No doctors registered in the system.\n");
+            return;
+        }
+
+        ArrayList<Doctor> availableDoctors = new ArrayList<>();
+        for (Doctor d : allDoctors) {
+            if (d.isSlotAvailable(slot)) {
+                availableDoctors.add(d);
+            }
+        }
+
+        if (availableDoctors.isEmpty()) {
+            System.out.println("\n  [INFO] No doctors available at " + slot + ". Please try another slot.\n");
+            return;
+        }
+
+        Random rand = new Random();
+        Doctor assignedDoc = availableDoctors.get(rand.nextInt(availableDoctors.size()));
+
+        assignedDoc.bookSlot(slot);
+        Appointment appointment = new Appointment(patient, assignedDoc, slot);
+        appointmentList.add(appointment);
+
+        System.out.println("\n  ✓ Appointment Booked Successfully!");
+        System.out.println("  Appointment ID : " + appointment.getId());
+        System.out.println("  Doctor Assigned: " + assignedDoc.getName() + " (" + assignedDoc.getId() + ")");
+        System.out.println("  Slot           : " + slot + "\n");
     }
 
     private void viewPatients() {
@@ -76,8 +122,17 @@ public class FrontDeskMenu {
         System.out.println("+--------+----------------------+--------+-----+--------------+\n");
     }
 
-    private void bookAppointment() {
-        System.out.println("\n  [Book Appointment] -- Will be implemented in UC9.\n");
+    private void viewAppointments() {
+        System.out.println("\n--- Booked Appointments ---");
+        if (appointmentList.isEmpty()) {
+            System.out.println("  No appointments booked yet.\n");
+            return;
+        }
+        System.out.println("+--------+----------------------+----------------------+---------+");
+        System.out.println("| ID     | Patient              | Doctor               | Slot    |");
+        System.out.println("+--------+----------------------+----------------------+---------+");
+        for (Appointment a : appointmentList) System.out.println(a);
+        System.out.println("+--------+----------------------+----------------------+---------+\n");
     }
 
     public static ArrayList<Patient> getPatientList() { return patientList; }
