@@ -34,17 +34,33 @@ public class FrontDeskMenu {
         System.out.println("  4. Logout                       ");
     }
 
-    // UC7: Register a new patient
     private void registerPatient() {
         System.out.println("\n--- Patient Registration ---");
+        String mobile = ScannerHelper.readMobileNumber("  Mobile Number   : ");
+
+        Patient existing = findPatientByMobile(mobile);
+        if (existing != null) {
+            System.out.println("\n  Welcome back, " + existing.getName() + "! (ID: " + existing.getId() + ")");
+            System.out.println("  Patient is already registered. No new entry created.\n");
+            return;
+        }
+
         String name   = ScannerHelper.readString("  Name            : ");
         String gender = ScannerHelper.readString("  Gender (M/F/O)  : ");
         int    age    = ScannerHelper.readInt(   "  Age             : ");
-        String mobile = ScannerHelper.readMobileNumber("  Mobile Number   : ");
 
         Patient patient = new Patient(name, gender, age, mobile);
         patientList.add(patient);
         System.out.println("\n  ✓ Patient registered! ID: " + patient.getId() + "\n");
+    }
+
+    private Patient findPatientByMobile(String mobile) {
+        for (Patient p : patientList) {
+            if (p.getMobileNumber().equals(mobile)) {
+                return p;
+            }
+        }
+        return null;
     }
 
     private void viewPatients() {
