@@ -25,7 +25,6 @@ public class Doctor {
 
     public String         getId()             { return id; }
     public String         getName()           { return name; }
-    // UC10: getter needed so Stream API can filter by specialization
     public Specialization getSpecialization() { return specialization; }
     public int            getExperience()     { return experience; }
     public Shift          getShift()          { return shift; }
@@ -36,6 +35,20 @@ public class Doctor {
 
     public void bookSlot(String slot) {
         bookedSlots.add(slot);
+    }
+
+    public boolean isShiftCompatible(String slot) {
+        int hour = Integer.parseInt(slot.split(":")[0]);
+        switch (shift) {
+            case MORNING:
+                return hour >= 9 && hour < 13;
+            case EVENING:
+                return hour >= 16 && hour < 20;
+            case BOTH:
+                return (hour >= 9 && hour < 13) || (hour >= 16 && hour < 20);
+            default:
+                return false;
+        }
     }
 
     @Override

@@ -32,7 +32,7 @@ public class FrontDeskMenu {
 
     private void displayFrontDeskOptions() {
         System.out.println("  FRONT DESK MENU — TownClinic    ");
-        System.out.println("                                     ");
+        System.out.println("                                    ");
         System.out.println("  1. Register Patient             ");
         System.out.println("  2. Book Appointment             ");
         System.out.println("  3. View Patients                ");
@@ -67,6 +67,7 @@ public class FrontDeskMenu {
         return null;
     }
 
+    // UC11: Tri-filter chain — Specialization -> Shift Compatibility -> Slot Availability
     private void bookAppointment() {
         System.out.println("\n--- Book Appointment ---");
 
@@ -85,13 +86,16 @@ public class FrontDeskMenu {
 
         ArrayList<Doctor> allDoctors = AdminMenu.getDoctorList();
 
+        // UC11: Three chained predicates
         List<Doctor> matchingDoctors = allDoctors.stream()
-                .filter(d -> d.getSpecialization() == requiredSpec)   // Enum comparison with ==
-                .filter(d -> d.isSlotAvailable(slot))
+                .filter(d -> d.getSpecialization() == requiredSpec)  // 1. Specialization match
+                .filter(d -> d.isShiftCompatible(slot))               // 2. Shift compatibility (NEW in UC11)
+                .filter(d -> d.isSlotAvailable(slot))                 // 3. Slot availability
                 .collect(Collectors.toList());
 
         if (matchingDoctors.isEmpty()) {
-            System.out.println("\n  [INFO] No " + requiredSpec.name() + " doctor available at " + slot + ".\n");
+            System.out.println("\n  [INFO] No " + requiredSpec.name()
+                    + " doctor available (matching shift) at " + slot + ".\n");
             return;
         }
 
@@ -106,6 +110,7 @@ public class FrontDeskMenu {
         System.out.println("  Appointment ID : " + appointment.getId());
         System.out.println("  Doctor Assigned: " + assignedDoc.getName() + " (" + assignedDoc.getId() + ")");
         System.out.println("  Specialization : " + assignedDoc.getSpecialization());
+        System.out.println("  Shift          : " + assignedDoc.getShift());
         System.out.println("  Slot           : " + slot + "\n");
     }
 
