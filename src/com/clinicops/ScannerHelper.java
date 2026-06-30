@@ -50,7 +50,5 @@ public class ScannerHelper {
             }
             System.out.println("  [ERROR] Invalid Indian mobile number. Must be 10 digits starting with 6-9.");
         }
-
-
     }
 }

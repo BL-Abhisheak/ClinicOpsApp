@@ -8,9 +8,9 @@
 !src/
 !src/**
 
-# Keep Maven files
-!pom.xml
-!mvnw
-!mvnw.cmd
-!.mvn/
-!.mvn/**
+## Keep Maven files
+#!pom.xml
+#!mvnw
+#!mvnw.cmd
+#!.mvn/
+#!.mvn/**
