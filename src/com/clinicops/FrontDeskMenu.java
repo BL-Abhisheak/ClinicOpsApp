@@ -32,7 +32,7 @@ public class FrontDeskMenu {
 
     private void displayFrontDeskOptions() {
         System.out.println("  FRONT DESK MENU — TownClinic    ");
-        System.out.println("                                    ");
+        System.out.println("                                         ");
         System.out.println("  1. Register Patient             ");
         System.out.println("  2. Book Appointment             ");
         System.out.println("  3. View Patients                ");
@@ -57,6 +57,10 @@ public class FrontDeskMenu {
 
         Patient patient = new Patient(name, gender, age, mobile);
         patientList.add(patient);
+
+        AuditLogger.log("Patient registered: " + patient.getName()
+                + " [" + patient.getId() + "]", AuditLogger.Level.INFO);
+
         System.out.println("\n  ✓ Patient registered! ID: " + patient.getId() + "\n");
     }
 
@@ -85,7 +89,6 @@ public class FrontDeskMenu {
 
         ArrayList<Doctor> allDoctors = AdminMenu.getDoctorList();
 
-        // UC11: Three chained predicates
         List<Doctor> matchingDoctors = allDoctors.stream()
                 .filter(d -> d.getSpecialization() == requiredSpec)
                 .filter(d -> d.isShiftCompatible(slot))
@@ -104,6 +107,12 @@ public class FrontDeskMenu {
         assignedDoc.bookSlot(slot);
         Appointment appointment = new Appointment(patient, assignedDoc, slot);
         appointmentList.add(appointment);
+
+        AuditLogger.log("Appointment booked: " + appointment.getId()
+                + " | Patient: " + patient.getName()
+                + " | Doctor: " + assignedDoc.getName()
+                + " | Specialization: " + assignedDoc.getSpecialization()
+                + " | Slot: " + slot, AuditLogger.Level.INFO);
 
         System.out.println("\n  ✓ Appointment Booked Successfully!");
         System.out.println("  Appointment ID : " + appointment.getId());

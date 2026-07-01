@@ -47,6 +47,11 @@ public class AdminMenu {
 
         Doctor doctor = new Doctor(name, spec, exp, shift);
         doctorList.add(doctor);
+
+        AuditLogger.log("Doctor registered: " + doctor.getName()
+                        + " [" + doctor.getId() + "] - " + spec + " - " + shift,
+                AuditLogger.Level.INFO);
+
         System.out.println("\n  ✓ Doctor registered! ID: " + doctor.getId() + "\n");
     }
 
