@@ -32,11 +32,13 @@ public class FileHandler {
                 lineNum++;
 
                 if (row.length == 0 || (row.length == 1 && row[0].trim().isEmpty())) {
-                    continue; // skip blank lines
+                    continue;
                 }
 
                 if (row.length != 4) {
-                    System.out.println("  [SKIP] Line " + lineNum + ": Expected 4 fields, found " + row.length);
+                    String msg = "Line " + lineNum + ": Expected 4 fields, found " + row.length;
+                    System.out.println("  [SKIP] " + msg);
+                    AuditLogger.log("CSV import - " + msg, AuditLogger.Level.WARNING);
                     skippedCount++;
                     continue;
                 }
@@ -50,7 +52,9 @@ public class FileHandler {
                 try {
                     spec = Specialization.valueOf(specStr);
                 } catch (IllegalArgumentException e) {
-                    System.out.println("  [SKIP] Line " + lineNum + ": Unknown specialization '" + specStr + "' for doctor '" + name + "'");
+                    String msg = "Line " + lineNum + ": Unknown specialization '" + specStr + "' for doctor '" + name + "'";
+                    System.out.println("  [SKIP] " + msg);
+                    AuditLogger.log("CSV import - " + msg, AuditLogger.Level.WARNING);
                     skippedCount++;
                     continue;
                 }
@@ -59,7 +63,9 @@ public class FileHandler {
                 try {
                     shift = Shift.valueOf(shiftStr);
                 } catch (IllegalArgumentException e) {
-                    System.out.println("  [SKIP] Line " + lineNum + ": Unknown shift '" + shiftStr + "' for doctor '" + name + "'");
+                    String msg = "Line " + lineNum + ": Unknown shift '" + shiftStr + "' for doctor '" + name + "'";
+                    System.out.println("  [SKIP] " + msg);
+                    AuditLogger.log("CSV import - " + msg, AuditLogger.Level.WARNING);
                     skippedCount++;
                     continue;
                 }
@@ -68,34 +74,46 @@ public class FileHandler {
                 try {
                     exp = Integer.parseInt(expStr);
                 } catch (NumberFormatException e) {
-                    System.out.println("  [SKIP] Line " + lineNum + ": Experience must be a number, got '" + expStr + "' for doctor '" + name + "'");
+                    String msg = "Line " + lineNum + ": Experience must be a number, got '" + expStr + "' for doctor '" + name + "'";
+                    System.out.println("  [SKIP] " + msg);
+                    AuditLogger.log("CSV import - " + msg, AuditLogger.Level.WARNING);
                     skippedCount++;
                     continue;
                 }
 
                 String fingerprint = buildFingerprint(name, spec.name(), exp);
                 if (existingFingerprints.contains(fingerprint)) {
-                    System.out.println("  [SKIP-DUP] Line " + lineNum + ": Duplicate doctor '" + name + "' (" + spec + ", " + exp + " yrs) already exists.");
+                    String msg = "Line " + lineNum + ": Duplicate doctor '" + name + "' (" + spec + ", " + exp + " yrs)";
+                    System.out.println("  [SKIP-DUP] " + msg);
+                    AuditLogger.log("CSV import - " + msg, AuditLogger.Level.WARNING);
                     duplicateCount++;
                     continue;
                 }
 
                 Doctor doctor = new Doctor(name, spec, exp, shift);
                 importedDoctors.add(doctor);
-                existingFingerprints.add(fingerprint); // prevent duplicates within same file too
+                existingFingerprints.add(fingerprint);
                 successCount++;
             }
 
         } catch (IOException e) {
-            System.out.println("  [ERROR] Could not read file: " + e.getMessage());
+            String msg = "Could not read file '" + filePath + "': " + e.getMessage();
+            System.out.println("  [ERROR] " + msg);
+            AuditLogger.log("CSV import - " + msg, AuditLogger.Level.ERROR);
         } catch (CsvValidationException e) {
-            System.out.println("  [ERROR] CSV format is invalid: " + e.getMessage());
+            String msg = "Invalid CSV format in '" + filePath + "': " + e.getMessage();
+            System.out.println("  [ERROR] " + msg);
+            AuditLogger.log("CSV import - " + msg, AuditLogger.Level.ERROR);
         }
 
         System.out.println("\n  --- Import Summary ---");
         System.out.println("  Successfully imported : " + successCount);
         System.out.println("  Skipped (bad format)  : " + skippedCount);
         System.out.println("  Skipped (duplicates)  : " + duplicateCount);
+
+        AuditLogger.log("CSV import completed - Success: " + successCount
+                        + ", Skipped: " + skippedCount + ", Duplicates: " + duplicateCount,
+                AuditLogger.Level.INFO);
 
         return importedDoctors;
     }

@@ -52,13 +52,24 @@ public class ScannerHelper {
     }
 
     public static String readMobileNumber(String prompt) {
+        int failCount = 0;
         while (true) {
             System.out.print(prompt);
             String mobile = scanner.nextLine().trim();
             if (mobile.matches("^[6-9]\\d{9}$")) {
                 return mobile;
             }
+            failCount++;
             System.out.println("  [ERROR] Invalid Indian mobile number. Must be 10 digits starting with 6-9.");
+
+            AuditLogger.log("Invalid mobile number entered (attempt #" + failCount + "): '" + mobile + "'",
+                    AuditLogger.Level.WARNING);
+
+            if (failCount >= 3) {
+                AuditLogger.log("SECURITY ALERT: " + failCount
+                                + " consecutive invalid mobile number entries detected.",
+                        AuditLogger.Level.ERROR);
+            }
         }
     }
 
