@@ -67,7 +67,6 @@ public class FrontDeskMenu {
         return null;
     }
 
-    // UC11: Tri-filter chain — Specialization -> Shift Compatibility -> Slot Availability
     private void bookAppointment() {
         System.out.println("\n--- Book Appointment ---");
 
@@ -88,9 +87,9 @@ public class FrontDeskMenu {
 
         // UC11: Three chained predicates
         List<Doctor> matchingDoctors = allDoctors.stream()
-                .filter(d -> d.getSpecialization() == requiredSpec)  // 1. Specialization match
-                .filter(d -> d.isShiftCompatible(slot))               // 2. Shift compatibility (NEW in UC11)
-                .filter(d -> d.isSlotAvailable(slot))                 // 3. Slot availability
+                .filter(d -> d.getSpecialization() == requiredSpec)
+                .filter(d -> d.isShiftCompatible(slot))
+                .filter(d -> d.isSlotAvailable(slot))
                 .collect(Collectors.toList());
 
         if (matchingDoctors.isEmpty()) {

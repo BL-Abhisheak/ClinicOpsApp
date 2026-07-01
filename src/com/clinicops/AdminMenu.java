@@ -16,9 +16,7 @@ public class AdminMenu {
                 case 2:
                     System.out.println("\n  [Bulk Data Entry] -- Implemented in UC5/UC6.\n");
                     break;
-                case 3:
-                    System.out.println("\n  [View Audit Logs] -- Will be implemented in UC12.\n");
-                    break;
+                case 3: viewAuditLogs();   break;
                 case 4: displayDoctors();  break;
                 case 5:
                     System.out.println("\n  Logging out from Admin panel. Goodbye, Admin!\n");
@@ -31,9 +29,9 @@ public class AdminMenu {
     }
 
     private void displayAdminOptions() {
-        System.out.println("      ADMIN MENU — TownClinic  ");
+        System.out.println("      ADMIN MENU — TownClinic ");
         System.out.println("                                ");
-        System.out.println("  1. Doctor Entry              ");
+        System.out.println("  1. Doctor Entry             ");
         System.out.println("  2. Bulk Data Entry          ");
         System.out.println("  3. View Audit Logs          ");
         System.out.println("  4. View Doctors             ");
@@ -50,6 +48,18 @@ public class AdminMenu {
         Doctor doctor = new Doctor(name, spec, exp, shift);
         doctorList.add(doctor);
         System.out.println("\n  ✓ Doctor registered! ID: " + doctor.getId() + "\n");
+    }
+
+    private void viewAuditLogs() {
+        System.out.println("\n--- Audit Logs ---");
+        if (AuditLogger.getLogs().isEmpty()) {
+            System.out.println("  No logs recorded yet.\n");
+            return;
+        }
+        for (String entry : AuditLogger.getLogs()) {
+            System.out.println("  " + entry);
+        }
+        System.out.println();
     }
 
     void displayDoctors() {
